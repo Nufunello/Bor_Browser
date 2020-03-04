@@ -12,11 +12,19 @@ public:
 
 public:
     void AddTab(std::shared_ptr<Tab>);
+    void ChangeTab(std::shared_ptr<Tab>);
 
-signals:
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
-    std::shared_ptr<Tab> m_Tab;
+    std::vector<std::shared_ptr<Tab>> m_Tabs;
+    std::shared_ptr<Tab> m_CurrentTab;
+
+private:
+    void setCurrentTabDisabled();
+    void setCurrentTabEnabled();
 
 };
 

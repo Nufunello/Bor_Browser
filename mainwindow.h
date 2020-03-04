@@ -13,14 +13,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
-    TabViewWrapper m_TabView;
-    QPushButton btn;
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
-    inline void add(){
-        m_TabView.AddTabView(std::make_shared<TabView>(&m_TabView));
-    }
+    std::shared_ptr<TabViewWrapper> m_TabView;
+    std::vector<std::shared_ptr<TabView>> m_TabViews;
+
+private:
+    void addEmptyTabView();
 
 };
 #endif // MAINWINDOW_H

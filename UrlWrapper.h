@@ -12,7 +12,7 @@ public:
     explicit UrlWrapper(QWidget *parent = nullptr);
 
 public:
-    void AddUrl(std::shared_ptr<Url>);
+    void ChangeUrl(std::shared_ptr<Url>);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

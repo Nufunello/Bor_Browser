@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,6 +22,8 @@ SOURCES += \
     TabWrapper.cpp \
     Url.cpp \
     UrlWrapper.cpp \
+    WebView.cpp \
+    WebViewWrapper.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -32,6 +34,8 @@ HEADERS += \
     TabWrapper.h \
     Url.h \
     UrlWrapper.h \
+    WebView.h \
+    WebViewWrapper.h \
     mainwindow.h
 
 # Default rules for deployment.

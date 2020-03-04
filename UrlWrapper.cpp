@@ -8,15 +8,23 @@ UrlWrapper::UrlWrapper(QWidget *parent)
 {
 }
 
-void UrlWrapper::AddUrl(std::shared_ptr<Url> url)
+void UrlWrapper::ChangeUrl(std::shared_ptr<Url> url)
 {
+    if (m_Url != nullptr)
+    {
+        m_Url->hide();
+    }
+
     m_Url = url;
+    m_Url->show();
+
+    m_Url->resize(size());
 }
 
 void UrlWrapper::resizeEvent(QResizeEvent *event)
 {
     if (m_Url != nullptr)
     {
-        m_Url->resize(event->size().width(), event->size().height());
+        m_Url->resize(event->size());
     }
 }
