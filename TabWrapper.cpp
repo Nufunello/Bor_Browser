@@ -33,7 +33,10 @@ void TabWrapper::paintEvent(QPaintEvent *)
 
 void TabWrapper::resizeEvent(QResizeEvent *event)
 {
-    int width = 100, height = event->size().height();
+    int wrapWidth = width();
+
+    int width = (m_Tabs.size() != 0) ?  wrapWidth / m_Tabs.size() : 100;
+    int height = event->size().height();
 
     std::for_each(m_Tabs.begin(), m_Tabs.end(), [width, height](std::shared_ptr<Tab> tab){
         tab->resize(width, height);
