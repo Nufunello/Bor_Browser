@@ -17,17 +17,16 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public:
-    std::shared_ptr<WebView> GetWebView();
+    std::shared_ptr<Navigation> GetNavigation();
+    std::shared_ptr<WebView>    GetWebView();
 
 signals:
 
 private:
     QVBoxLayout m_MainLayout;
 
-    Navigation                   m_Navigation;
-    BookmarkMenu                 m_BookmarkMenu;
-
-    std::shared_ptr<WebView>     m_WebView;
+    std::shared_ptr<Navigation> m_Navigation;
+    std::shared_ptr<WebView>    m_WebView;
 
 private:
     void moveWidgets();

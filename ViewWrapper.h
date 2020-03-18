@@ -18,6 +18,8 @@ public:
     void ChangeView(std::shared_ptr<View>);
     void AddView(std::shared_ptr<View>);
 
+    std::shared_ptr<View> GetCurrentView();
+
 signals:
 
 private:

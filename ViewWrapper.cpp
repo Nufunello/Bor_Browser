@@ -29,6 +29,11 @@ void ViewWrapper::AddView(std::shared_ptr<View> view)
     this->ChangeView(std::move(view));
 }
 
+std::shared_ptr<View> ViewWrapper::GetCurrentView()
+{
+    return m_CurrentView;
+}
+
 void ViewWrapper::closeCurrentView()
 {
     if (m_CurrentView != nullptr)

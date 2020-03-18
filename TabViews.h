@@ -27,6 +27,7 @@ private:
 
     TabBar        m_TabBar;
     ViewWrapper   m_View;
+    BookmarkMenu  m_BookmarkMenu;
 
 private:
     void addEmptyTab();

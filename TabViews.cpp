@@ -18,6 +18,10 @@ TabViews::TabViews(QWidget *parent)
 
     connect(&m_TabBar, &TabBar::IsEmpty,       this, &TabViews::addEmptyTab);
     connect(&m_TabBar, &TabBar::AddTabClicked, this, &TabViews::addEmptyTab);
+
+    connect(&m_BookmarkMenu, &BookmarkMenu::BookmarkSelected, [this](QUrl url){
+        m_View.GetCurrentView()->GetWebView()->LoadUrl(std::move(url));
+    });
 }
 
 void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
@@ -34,11 +38,14 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
     m_TabBar.AddTab(tab);
     m_View.AddView(view);
 
+    //Tab change connection
     connect(&*tab, &Tab::Selected, [=](){
         m_TabBar.ChangeTab(weakTab.lock());
         m_View.ChangeView(weakView.lock());
     });
+    //
 
+    //WebView connections
     connect(&*view->GetWebView(), &WebView::UrlChanged, [weakTab](QWebEnginePage* page){
         weakTab.lock()->UpdateTabInfo(page->title());
     });
@@ -46,6 +53,16 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
     connect(&*view->GetWebView(), &WebView::PageUpdated, [weakTab](QWebEnginePage* page){
         weakTab.lock()->UpdateTabInfo(page->title());
     });
+    //
+
+    //Bookmarks connections
+    auto bookmarkPanelPtr = &*m_View.GetCurrentView()->GetNavigation()->GetBookmarkPanel();
+    connect(bookmarkPanelPtr, &BookmarkPanel::AddBookmarkPressed, [this](){
+        m_BookmarkMenu.AddBookmark(&*m_View.GetCurrentView()->GetWebView()->GetCurrentPage());
+    });
+
+    connect(bookmarkPanelPtr, &BookmarkPanel::OpenBookmarksPressed, &m_BookmarkMenu, &BookmarkMenu::show);
+    //
 }
 
 void TabViews::resizeEvent(QResizeEvent *event)

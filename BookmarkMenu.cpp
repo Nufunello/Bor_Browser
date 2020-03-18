@@ -31,8 +31,8 @@ void BookmarkMenu::AddBookmark(QWebEnginePage* page)
 
     std::weak_ptr<Bookmark> weakBookmark = newBookmark;
 
-    connect(&*newBookmark, &Bookmark::RemovePressed, [weakBookmark, this](){
-        m_Bookmarks.erase(weakBookmark.lock());
+    connect(&*newBookmark, &Bookmark::HrefPressed, [weakBookmark, this](QUrl url){
+        emit this->BookmarkSelected(url);
     });
 
     connect(&*newBookmark, &Bookmark::RemovePressed, [weakBookmark, this](){

@@ -30,6 +30,7 @@ public:
     void AddBookmark(QWebEnginePage*);
 
 signals:
+    void BookmarkSelected(QUrl);
 
 private:
     std::set<std::shared_ptr<Bookmark>, BookmarkCompare> m_Bookmarks;
