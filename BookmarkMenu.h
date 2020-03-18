@@ -11,7 +11,7 @@
 
 struct BookmarkCompare
 {
-    bool operator()(const std::unique_ptr<Bookmark>& lhs, const std::unique_ptr<Bookmark>& rhs) const
+    bool operator()(const std::shared_ptr<Bookmark>& lhs, const std::shared_ptr<Bookmark>& rhs) const
     {
         return lhs->GetUrl() < rhs->GetUrl();
     }
@@ -32,7 +32,7 @@ public:
 signals:
 
 private:
-    std::set<std::unique_ptr<Bookmark>, BookmarkCompare> m_Bookmarks;
+    std::set<std::shared_ptr<Bookmark>, BookmarkCompare> m_Bookmarks;
 
 };
 
