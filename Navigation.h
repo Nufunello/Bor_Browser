@@ -22,12 +22,11 @@ public slots:
 
 public:
     std::shared_ptr<NavigationPanel> GetNavigationPanel();
-    std::shared_ptr<NavigationUrl> GetNavigationUrl();
-    std::shared_ptr<BookmarkPanel> GetBookmarkPanel();
+    std::shared_ptr<NavigationUrl>   GetNavigationUrl();
+    std::shared_ptr<BookmarkPanel>   GetBookmarkPanel();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-    void moveEvent(QMoveEvent *event) override;
 
 signals:
 
@@ -36,7 +35,7 @@ private:
 
     std::shared_ptr<NavigationPanel> m_Panel;
     std::shared_ptr<NavigationUrl>   m_Url;
-    std::shared_ptr<BookmarkPanel>    m_Bookmark;
+    std::shared_ptr<BookmarkPanel>   m_Bookmark;
 
 private:
     void moveWidgets(QPoint point);

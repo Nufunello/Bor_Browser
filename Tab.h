@@ -18,9 +18,14 @@ protected:
 
 signals:
     void Selected();
+    void Removed();
 
 private:
-    std::unique_ptr<QPushButton> m_BtnToBeSelected;
+    QPushButton m_BtnToBeSelected;
+    QPushButton m_BtnToRemove;
+
+private:
+    void moveButtons();
 
 };
 

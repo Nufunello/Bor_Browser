@@ -4,7 +4,7 @@
 #include <QResizeEvent>
 
 constexpr int PANEL_WIDTH = 90;
-constexpr int BOOKMARK_WIDTH = 60;
+constexpr int BOOKMARK_WIDTH = 80;
 
 Navigation::Navigation(QWidget *parent)
     : QWidget(parent)
@@ -55,11 +55,6 @@ void Navigation::resizeEvent(QResizeEvent *event)
     m_Bookmark->resize(BOOKMARK_WIDTH, height);
 
     moveWidgets(this->pos());
-}
-
-void Navigation::moveEvent(QMoveEvent *event)
-{
-    moveWidgets(event->pos());
 }
 
 void Navigation::moveWidgets(QPoint point)

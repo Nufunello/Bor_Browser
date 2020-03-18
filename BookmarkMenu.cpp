@@ -35,5 +35,9 @@ void BookmarkMenu::AddBookmark(QWebEnginePage* page)
         m_Bookmarks.erase(weakBookmark.lock());
     });
 
+    connect(&*newBookmark, &Bookmark::RemovePressed, [weakBookmark, this](){
+        m_Bookmarks.erase(weakBookmark.lock());
+    });
+
     m_Bookmarks.insert(newBookmark);
 }

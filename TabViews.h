@@ -28,8 +28,6 @@ private:
     TabBar        m_TabBar;
     ViewWrapper   m_View;
 
-    std::vector<std::shared_ptr<TabView>> m_TabViews;
-
 private:
     void addEmptyTab();
 

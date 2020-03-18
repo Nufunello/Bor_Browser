@@ -18,9 +18,9 @@ View::View(QWidget *parent)
     });
 
     auto navigationPanelPtr = &*m_Navigation.GetNavigationPanel();
-    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed, &*m_WebView, &WebView::GoBack);
-    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed, &*m_WebView, &WebView::GoForward);
-    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed, &*m_WebView, &WebView::Refresh);
+    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed,    &*m_WebView, &WebView::GoBack);
+    connect(navigationPanelPtr, &NavigationPanel::GoForwardPressed, &*m_WebView, &WebView::GoForward);
+    connect(navigationPanelPtr, &NavigationPanel::RefreshPressed,   &*m_WebView, &WebView::Refresh);
 
     auto navigationUrlPtr = &*m_Navigation.GetNavigationUrl();
     connect(navigationUrlPtr, &NavigationUrl::UrlEntered, [this](QUrl url){

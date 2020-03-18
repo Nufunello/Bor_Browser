@@ -16,6 +16,7 @@ TabViews::TabViews(QWidget *parent)
     addEmptyTab();
     addEmptyTab();
 
+    connect(&m_TabBar, &TabBar::IsEmpty,       this, &TabViews::addEmptyTab);
     connect(&m_TabBar, &TabBar::AddTabClicked, this, &TabViews::addEmptyTab);
 }
 
@@ -27,21 +28,23 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
     tab->setParent(&m_TabBar);
     view->setParent(&m_View);
 
+    std::weak_ptr<Tab> weakTab = tab;
     std::weak_ptr<View> weakView = view;
 
     m_TabBar.AddTab(tab);
-    m_View.ChangeView(view);
+    m_View.AddView(view);
 
     connect(&*tab, &Tab::Selected, [=](){
+        m_TabBar.ChangeTab(weakTab.lock());
         m_View.ChangeView(weakView.lock());
     });
 
-    connect(&*view->GetWebView(), &WebView::UrlChanged, [tab](QWebEnginePage* page){
-        tab->UpdateTabInfo(page->title());
+    connect(&*view->GetWebView(), &WebView::UrlChanged, [weakTab](QWebEnginePage* page){
+        weakTab.lock()->UpdateTabInfo(page->title());
     });
 
-    connect(&*view->GetWebView(), &WebView::PageUpdated, [tab](QWebEnginePage* page){
-        tab->UpdateTabInfo(page->title());
+    connect(&*view->GetWebView(), &WebView::PageUpdated, [weakTab](QWebEnginePage* page){
+        weakTab.lock()->UpdateTabInfo(page->title());
     });
 }
 
@@ -63,6 +66,5 @@ void TabViews::moveEvent(QMoveEvent *event)
 
 void TabViews::addEmptyTab()
 {
-    m_TabViews.emplace_back(std::make_shared<TabView>());
-    AddTabView(*m_TabViews.rbegin());
+    AddTabView(std::make_shared<TabView>());
 }

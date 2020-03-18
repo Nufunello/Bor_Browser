@@ -3,6 +3,8 @@
 
 #include "Tab.h"
 
+#include <set>
+
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -16,17 +18,23 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
 
-public:
+public slots:
     void AddTab(std::shared_ptr<Tab>);
+    void ChangeTab(std::shared_ptr<Tab>);
 
 signals:
     void AddTabClicked();
+    void IsEmpty();
 
 private:
-    QHBoxLayout m_HorizontalLayout;
+    std::shared_ptr<Tab>              m_CurrentTab;
 
-    std::vector<std::shared_ptr<Tab>> m_Tabs;
+    std::set<std::shared_ptr<Tab>>    m_Tabs;
     QPushButton                       m_BtnAddTab;
+
+private:
+    void enableCurrentTab();
+    void disableCurrentTab();
 
 };
 

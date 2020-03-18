@@ -16,11 +16,13 @@ protected:
 
 public:
     void ChangeView(std::shared_ptr<View>);
+    void AddView(std::shared_ptr<View>);
 
 signals:
 
 private:
     std::shared_ptr<View> m_CurrentView;
+    std::vector<std::shared_ptr<View>> m_Views;
 
 private:
     void closeCurrentView();
