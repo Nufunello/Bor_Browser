@@ -16,26 +16,36 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Bookmark.cpp \
+    BookmarkMenu.cpp \
+    BookmarkPanel.cpp \
+    Navigation.cpp \
+    NavigationPanel.cpp \
+    NavigationUrl.cpp \
     Tab.cpp \
+    TabBar.cpp \
     TabView.cpp \
-    TabViewWrapper.cpp \
-    TabWrapper.cpp \
-    Url.cpp \
-    UrlWrapper.cpp \
+    TabViews.cpp \
+    View.cpp \
+    ViewWrapper.cpp \
     WebView.cpp \
-    WebViewWrapper.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    Bookmark.h \
+    BookmarkMenu.h \
+    BookmarkPanel.h \
+    Navigation.h \
+    NavigationPanel.h \
+    NavigationUrl.h \
     Tab.h \
+    TabBar.h \
     TabView.h \
-    TabViewWrapper.h \
-    TabWrapper.h \
-    Url.h \
-    UrlWrapper.h \
+    TabViews.h \
+    View.h \
+    ViewWrapper.h \
     WebView.h \
-    WebViewWrapper.h \
     mainwindow.h
 
 # Default rules for deployment.

@@ -1,9 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "TabViewWrapper.h"
+#include "TabViews.h"
 
 #include <QMainWindow>
+#include <QVBoxLayout>
 
 class MainWindow : public QMainWindow
 {
@@ -14,14 +15,10 @@ public:
     ~MainWindow();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;
+    void resizeEvent(QResizeEvent*) override;
 
 private:
-    std::shared_ptr<TabViewWrapper> m_TabView;
-    std::vector<std::shared_ptr<TabView>> m_TabViews;
-
-private:
-    void addEmptyTabView();
+    TabViews    m_TabView;
 
 };
 #endif // MAINWINDOW_H

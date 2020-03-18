@@ -1,33 +1,27 @@
 #ifndef TAB_H
 #define TAB_H
 
-#include <QWidget>
 #include <QPushButton>
-#include <QWebEnginePage>
-
-class TabWrapper;
+#include <QWidget>
 
 class Tab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Tab(std::shared_ptr<TabWrapper> parent = nullptr);
+    explicit Tab(QWidget *parent = nullptr);
 
 public slots:
-    void UpdateTab(QWebEnginePage* page);
+    void UpdateTabInfo(QString title);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-
-public:
-    void SetDisabled();
-    void SetEnabled();
 
 signals:
     void Selected();
 
 private:
-    std::shared_ptr<QPushButton> m_Btn;
+    std::unique_ptr<QPushButton> m_BtnToBeSelected;
+
 };
 
 #endif // TAB_H

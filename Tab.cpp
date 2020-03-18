@@ -1,33 +1,21 @@
 #include "Tab.h"
+
 #include <QResizeEvent>
 
-#include "TabWrapper.h"
-
-Tab::Tab(std::shared_ptr<TabWrapper> parent)
-    : QWidget(&*parent)
+Tab::Tab(QWidget *parent)
+    : QWidget(parent)
 {
-    m_Btn = std::make_shared<QPushButton>(this);
-    m_Btn->setText("Empty tab");
+    m_BtnToBeSelected = std::make_unique<QPushButton>(this);
 
-    connect(&*m_Btn, &QPushButton::clicked, this, &Tab::Selected);
+    connect(&*m_BtnToBeSelected, &QPushButton::clicked, this, &Tab::Selected);
 }
 
-void Tab::UpdateTab(QWebEnginePage *page)
+void Tab::UpdateTabInfo(QString title)
 {
-    m_Btn->setText(page->title());
+    m_BtnToBeSelected->setText(title);
 }
 
 void Tab::resizeEvent(QResizeEvent *event)
 {
-    m_Btn->resize(event->size().width(), event->size().height());
-}
-
-void Tab::SetEnabled()
-{
-    this->m_Btn->setEnabled(true);
-}
-
-void Tab::SetDisabled()
-{
-    this->m_Btn->setDisabled(true);
+    m_BtnToBeSelected->resize(event->size());
 }
