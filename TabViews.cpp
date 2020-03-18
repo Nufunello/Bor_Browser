@@ -14,7 +14,6 @@ TabViews::TabViews(QWidget *parent)
     m_MainLayout.addWidget(&m_View);
 
     addEmptyTab();
-    addEmptyTab();
 
     connect(&m_TabBar, &TabBar::IsEmpty,       this, &TabViews::addEmptyTab);
     connect(&m_TabBar, &TabBar::AddTabClicked, this, &TabViews::addEmptyTab);
@@ -31,6 +30,9 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
 
     tab->setParent(&m_TabBar);
     view->setParent(&m_View);
+
+    tab->show();
+    view->show();
 
     std::weak_ptr<Tab> weakTab = tab;
     std::weak_ptr<View> weakView = view;

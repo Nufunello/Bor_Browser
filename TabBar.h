@@ -27,6 +27,8 @@ signals:
     void IsEmpty();
 
 private:
+    QHBoxLayout                       m_HorizontalLayout;
+
     std::shared_ptr<Tab>              m_CurrentTab;
 
     std::set<std::shared_ptr<Tab>>    m_Tabs;
@@ -35,6 +37,8 @@ private:
 private:
     void enableCurrentTab();
     void disableCurrentTab();
+    void resizeTabs();
+    void resizeTabs(int height, int width);
 
 };
 
