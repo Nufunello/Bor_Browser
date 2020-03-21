@@ -21,6 +21,7 @@ protected:
 public slots:
     void AddTab(std::shared_ptr<Tab>);
     void ChangeTab(std::shared_ptr<Tab>);
+    void RemoveTab(std::shared_ptr<Tab>);
 
 signals:
     void AddTabClicked();
@@ -31,7 +32,7 @@ private:
 
     std::shared_ptr<Tab>              m_CurrentTab;
 
-    std::set<std::shared_ptr<Tab>>    m_Tabs;
+    std::vector<std::shared_ptr<Tab>> m_Tabs;
     QPushButton                       m_BtnAddTab;
 
 private:

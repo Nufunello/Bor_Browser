@@ -16,15 +16,14 @@ protected:
 
 public:
     void ChangeView(std::shared_ptr<View>);
-    void AddView(std::shared_ptr<View>);
 
     std::shared_ptr<View> GetCurrentView();
 
 signals:
+    void PageLoaded(QWebEnginePage*);
 
 private:
     std::shared_ptr<View> m_CurrentView;
-    std::vector<std::shared_ptr<View>> m_Views;
 
 private:
     void closeCurrentView();

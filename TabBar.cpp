@@ -17,9 +17,7 @@ TabBar::TabBar(QWidget *parent)
     m_BtnAddTab.setParent(this);
     m_BtnAddTab.setText("+");
 
-    connect(&m_BtnAddTab, &QPushButton::clicked, [this](){
-        emit this->AddTabClicked();
-    });
+    connect(&m_BtnAddTab, &QPushButton::clicked, this, &TabBar::AddTabClicked);
 }
 
 void TabBar::resizeEvent(QResizeEvent *event)
@@ -54,17 +52,7 @@ void TabBar::AddTab(std::shared_ptr<Tab> tab)
 
     std::weak_ptr<Tab> weakTab = tab;
 
-    connect(&*tab, &Tab::Removed, [this, weakTab](){
-        m_Tabs.erase(weakTab.lock());
-        this->resizeTabs();
-
-        if (m_Tabs.empty())
-        {
-            emit this->IsEmpty();
-        }
-    });
-
-    m_Tabs.insert(tab);
+    m_Tabs.emplace_back(tab);
 
     int tabWidth  = GetTabWidth(this->width(), m_Tabs.size());
     int tabHeight = this->height();
@@ -88,17 +76,36 @@ void TabBar::ChangeTab(std::shared_ptr<Tab> tab)
     disableCurrentTab();
 }
 
+void TabBar::RemoveTab(std::shared_ptr<Tab> tab)
+{
+    auto newTab = m_Tabs.erase(std::find(m_Tabs.begin(), m_Tabs.end(), tab));
+
+    if (m_Tabs.empty())
+    {
+        emit this->IsEmpty();
+    }
+    else
+    {
+        if (tab == m_CurrentTab)
+        {
+            this->ChangeTab(*newTab);
+            (*newTab)->Selected();
+        }
+        this->resizeTabs();
+    }
+}
+
 void TabBar::enableCurrentTab()
 {
     if (m_CurrentTab != nullptr)
     {
-        m_CurrentTab->setEnabled(true);
+        m_CurrentTab->SetEnabled();
     }
 }
 
 void TabBar::disableCurrentTab()
 {
-    m_CurrentTab->setDisabled(true);
+    m_CurrentTab->SetDisabled();
 }
 
 void TabBar::resizeTabs()

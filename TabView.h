@@ -2,20 +2,22 @@
 #define TABVIEW_H
 
 #include "Tab.h"
-#include "View.h"
 
-#include <QVBoxLayout>
-#include <QWidget>
-#include <memory>
+#include <QObject>
 
-class TabView
+class TabView : public QObject
 {
+    Q_OBJECT
 public:
-    TabView();
+    explicit TabView(QObject *parent = nullptr);
 
 public:
     std::shared_ptr<Tab>  GetTab();
     std::shared_ptr<View> GetView();
+
+signals:
+    void Selected();
+    void Removed();
 
 private:
     std::shared_ptr<Tab>  m_Tab;

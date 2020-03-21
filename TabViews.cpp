@@ -3,22 +3,41 @@
 #include <QResizeEvent>
 
 constexpr int TABBAR_HEIGHT = 30;
+constexpr int HISTORY_HEIGHT = TABBAR_HEIGHT;
+constexpr int HISTORY_WIDTH  = 60;
 
 TabViews::TabViews(QWidget *parent)
     : QWidget(parent)
 {
     m_TabBar.setParent(this);
+    m_History.setParent(this);
+
     m_View.setParent(this);
 
-    m_MainLayout.addWidget(&m_TabBar);
-    m_MainLayout.addWidget(&m_View);
+    m_MainLayout.addLayout(&m_TopLayout);
+    m_MainLayout.addLayout(&m_VerticalLayout);
+
+    m_TopLayout.addWidget(&m_TabBar);
+    m_TopLayout.addWidget(&m_History);
+
+    m_VerticalLayout.addWidget(&m_View);
 
     addEmptyTab();
 
-    connect(&m_TabBar, &TabBar::IsEmpty,       this, &TabViews::addEmptyTab);
     connect(&m_TabBar, &TabBar::AddTabClicked, this, &TabViews::addEmptyTab);
+    connect(&m_TabBar, &TabBar::IsEmpty,       this, &TabViews::addEmptyTab);
+
+
+    connect(&m_View, &ViewWrapper::PageLoaded, [this](QWebEnginePage* page){
+        m_History.GetHistoryMenu()->AddVisitedPage(page);
+    });
 
     connect(&m_BookmarkMenu, &BookmarkMenu::BookmarkSelected, [this](QUrl url){
+        m_View.GetCurrentView()->GetWebView()->LoadUrl(std::move(url));
+    });
+
+    auto historyMenu = m_History.GetHistoryMenu();
+    connect(&*historyMenu, &HistoryMenu::VisitedHistorySelected, [this](QUrl url){
         m_View.GetCurrentView()->GetWebView()->LoadUrl(std::move(url));
     });
 }
@@ -34,26 +53,26 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
     tab->show();
     view->show();
 
-    std::weak_ptr<Tab> weakTab = tab;
-    std::weak_ptr<View> weakView = view;
+    m_TabViews.insert(tabView);
 
     m_TabBar.AddTab(tab);
-    m_View.AddView(view);
+    m_View.ChangeView(view);
+
+    std::weak_ptr<TabView> weakTabView = tabView;
+
+    connect(&*tabView, &TabView::Removed, [this, weakTabView](){
+        auto tabView = weakTabView.lock();
+        m_TabBar.RemoveTab(tabView->GetTab());
+        m_TabViews.erase(tabView);
+    });
 
     //Tab change connection
-    connect(&*tab, &Tab::Selected, [=](){
+    std::weak_ptr<Tab>  weakTab  = tab;
+    std::weak_ptr<View> weakView = view;
+
+    connect(&*tabView, &TabView::Selected, [=](){
         m_TabBar.ChangeTab(weakTab.lock());
         m_View.ChangeView(weakView.lock());
-    });
-    //
-
-    //WebView connections
-    connect(&*view->GetWebView(), &WebView::UrlChanged, [weakTab](QWebEnginePage* page){
-        weakTab.lock()->UpdateTabInfo(page->title());
-    });
-
-    connect(&*view->GetWebView(), &WebView::PageUpdated, [weakTab](QWebEnginePage* page){
-        weakTab.lock()->UpdateTabInfo(page->title());
     });
     //
 
@@ -71,19 +90,29 @@ void TabViews::resizeEvent(QResizeEvent *event)
 {
     int width = event->size().width();
 
-    m_TabBar.resize(width, TABBAR_HEIGHT);
+    m_History.resize(HISTORY_WIDTH, HISTORY_HEIGHT);
+    m_TabBar.resize(width - HISTORY_WIDTH, TABBAR_HEIGHT);
 
     int viewHeight = event->size().height() - m_TabBar.height();
     m_View.resize(width, viewHeight);
+
+    moveWidgets(this->pos());
 }
 
 void TabViews::moveEvent(QMoveEvent *event)
 {
-    m_TabBar.move(event->pos());
-    m_View.move(event->pos().x(), m_TabBar.y() + TABBAR_HEIGHT);
+    moveWidgets(event->pos());
 }
 
 void TabViews::addEmptyTab()
 {
     AddTabView(std::make_shared<TabView>());
+}
+
+void TabViews::moveWidgets(QPoint pos)
+{
+    m_TabBar.move(pos);
+    m_History.move(m_TabBar.x() + m_TabBar.width(), m_TabBar.y());
+
+    m_View.move(pos.x(), m_TabBar.y() + TABBAR_HEIGHT);
 }

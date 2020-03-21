@@ -21,6 +21,7 @@ public:
     std::shared_ptr<WebView>    GetWebView();
 
 signals:
+    void PageLoaded(QWebEnginePage*);
 
 private:
     QVBoxLayout m_MainLayout;

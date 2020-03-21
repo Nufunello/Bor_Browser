@@ -12,6 +12,8 @@ View::View(QWidget *parent)
 
     connect(&*m_WebView, &WebView::UrlChanged, &*m_Navigation, &Navigation::UpdateNavigationStatus);
 
+    connect(&*m_WebView, &WebView::PageUpdated, this, &View::PageLoaded);
+
     connect(&*m_WebView, &WebView::Loading, [this](int progress){
         m_Navigation->ChangeLoadProgress(std::move(progress));
     });

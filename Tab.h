@@ -1,6 +1,8 @@
 #ifndef TAB_H
 #define TAB_H
 
+#include "View.h"
+
 #include <QPushButton>
 #include <QWidget>
 
@@ -12,6 +14,8 @@ public:
 
 public slots:
     void UpdateTabInfo(QString title);
+    void SetEnabled();
+    void SetDisabled();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -26,6 +30,8 @@ private:
 
 private:
     void moveButtons();
+
+     static int s_Counter;
 
 };
 

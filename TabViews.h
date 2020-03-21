@@ -1,6 +1,7 @@
 #ifndef TABVIEWWRAPPER_H
 #define TABVIEWWRAPPER_H
 
+#include "HistoryPanel.h"
 #include "TabBar.h"
 #include "TabView.h"
 #include "ViewWrapper.h"
@@ -25,12 +26,21 @@ signals:
 private:
     QVBoxLayout   m_MainLayout;
 
+    QHBoxLayout   m_TopLayout;
+    QVBoxLayout   m_VerticalLayout;
+
     TabBar        m_TabBar;
+    HistoryPanel  m_History;
+
     ViewWrapper   m_View;
     BookmarkMenu  m_BookmarkMenu;
 
 private:
+    std::set<std::shared_ptr<TabView>> m_TabViews;
+
+private:
     void addEmptyTab();
+    void moveWidgets(QPoint);
 
 };
 

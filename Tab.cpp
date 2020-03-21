@@ -5,6 +5,8 @@
 constexpr float MAIN_BUTTON_WIDTH_KOEF   = {0.8f};
 constexpr float REMOVE_BUTTON_WIDTH_KOEF = {0.2f};
 
+int Tab::s_Counter = 0;
+
 Tab::Tab(QWidget *parent)
     : QWidget(parent)
 {
@@ -20,6 +22,16 @@ Tab::Tab(QWidget *parent)
 void Tab::UpdateTabInfo(QString title)
 {
     m_BtnToBeSelected.setText(title);
+}
+
+void Tab::SetEnabled()
+{
+    m_BtnToBeSelected.setEnabled(true);
+}
+
+void Tab::SetDisabled()
+{
+    m_BtnToBeSelected.setDisabled(true);
 }
 
 void Tab::resizeEvent(QResizeEvent *event)

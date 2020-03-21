@@ -18,15 +18,11 @@ void ViewWrapper::resizeEvent(QResizeEvent *event)
 
 void ViewWrapper::ChangeView(std::shared_ptr<View> view)
 {
-    closeCurrentView();
-    m_CurrentView = std::move(view);
-    openCurrentView();
-}
+    connect(&*view, &View::PageLoaded, this, &ViewWrapper::PageLoaded);
 
-void ViewWrapper::AddView(std::shared_ptr<View> view)
-{
-    m_Views.emplace_back(view);
-    this->ChangeView(std::move(view));
+    closeCurrentView();
+    m_CurrentView = view;
+    openCurrentView();
 }
 
 std::shared_ptr<View> ViewWrapper::GetCurrentView()
@@ -42,6 +38,9 @@ void ViewWrapper::closeCurrentView()
 
 void ViewWrapper::openCurrentView()
 {
-    m_CurrentView->resize(this->size());
-    m_CurrentView->show();
+    if (m_CurrentView != nullptr)
+    {
+        m_CurrentView->resize(this->size());
+        m_CurrentView->show();
+    }
 }

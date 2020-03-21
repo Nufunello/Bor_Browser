@@ -19,6 +19,8 @@ SOURCES += \
     Bookmark.cpp \
     BookmarkMenu.cpp \
     BookmarkPanel.cpp \
+    HistoryMenu.cpp \
+    HistoryPanel.cpp \
     Navigation.cpp \
     NavigationPanel.cpp \
     NavigationUrl.cpp \
@@ -28,6 +30,7 @@ SOURCES += \
     TabViews.cpp \
     View.cpp \
     ViewWrapper.cpp \
+    VisitedHistory.cpp \
     WebView.cpp \
     main.cpp \
     mainwindow.cpp
@@ -36,6 +39,8 @@ HEADERS += \
     Bookmark.h \
     BookmarkMenu.h \
     BookmarkPanel.h \
+    HistoryMenu.h \
+    HistoryPanel.h \
     Navigation.h \
     NavigationPanel.h \
     NavigationUrl.h \
@@ -45,6 +50,8 @@ HEADERS += \
     TabViews.h \
     View.h \
     ViewWrapper.h \
+    VisitedHistory.h \
+    VisitedPage.h \
     WebView.h \
     mainwindow.h
 
