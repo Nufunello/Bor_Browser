@@ -2,6 +2,7 @@
 #define BOOKMARKMENU_H
 
 #include "Bookmark.h"
+#include "BookmarkPage.h"
 
 #include <set>
 
@@ -13,7 +14,7 @@ struct BookmarkCompare
 {
     bool operator()(const std::shared_ptr<Bookmark>& lhs, const std::shared_ptr<Bookmark>& rhs) const
     {
-        return lhs->GetUrl() < rhs->GetUrl();
+        return lhs->GetBookmarkData().Url < rhs->GetBookmarkData().Url;
     }
 };
 
@@ -22,12 +23,14 @@ class BookmarkMenu : public QMainWindow
     Q_OBJECT
 public:
     explicit BookmarkMenu(QWidget *parent = nullptr);
+    ~BookmarkMenu();
 
 protected:
     void paintEvent(QPaintEvent*) override;
+    void resizeEvent(QResizeEvent*) override;
 
 public:
-    void AddBookmark(QWebEnginePage*);
+    void AddBookmark(BookmarkPage);
 
 signals:
     void BookmarkSelected(QUrl);

@@ -22,6 +22,8 @@ TabViews::TabViews(QWidget *parent)
 
     m_VerticalLayout.addWidget(&m_View);
 
+    m_BookmarkMenu.resize(400, 400);
+
     addEmptyTab();
 
     connect(&m_TabBar, &TabBar::AddTabClicked, this, &TabViews::addEmptyTab);

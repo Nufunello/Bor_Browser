@@ -4,7 +4,6 @@
 
 Bookmark::Bookmark(QWidget *parent)
     : QWidget(parent)
-    , m_Url("FF")
 {
     m_Href.setParent(this);
     m_Remove.setParent(this);
@@ -13,13 +12,13 @@ Bookmark::Bookmark(QWidget *parent)
 
     connect(&m_Remove, &QPushButton::clicked, this, &Bookmark::RemovePressed);
     connect(&m_Href,   &QPushButton::clicked, [this](){
-        emit this->HrefPressed(m_Url);
+        emit this->HrefPressed(m_BookmarkData.Url);
     });
 }
 
-QUrl Bookmark::GetUrl()
+BookmarkPage Bookmark::GetBookmarkData()
 {
-    return m_Url;
+    return m_BookmarkData;
 }
 
 void Bookmark::resizeEvent(QResizeEvent *event)
@@ -30,12 +29,9 @@ void Bookmark::resizeEvent(QResizeEvent *event)
     m_Remove.move(m_Href.x() + m_Href.width(), m_Href.y());
 }
 
-void Bookmark::SetTitle(QString title)
+void Bookmark::SetInfo(BookmarkPage page)
 {
-    m_Href.setText(title);
-}
+    m_BookmarkData = std::move(page);
 
-void Bookmark::SetUrl(QUrl url)
-{
-    m_Url = std::move(url);
+    m_Href.setText(m_BookmarkData.Title);
 }

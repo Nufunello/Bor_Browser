@@ -1,32 +1,74 @@
 #include "BookmarkMenu.h"
 
 #include <QPaintEvent>
+#include <QResizeEvent>
 
 constexpr int BOOKMARK_HEIGHT = 30;
+
+constexpr char CSV_SEPARATOR[] = "||";
+constexpr char STORAGE_FILE[] = "bookmarks.csv";
 
 BookmarkMenu::BookmarkMenu(QWidget *parent)
     : QMainWindow(parent)
 {
-    resize(400, 400);
+    QFile bookmarksFile(STORAGE_FILE);
+    bookmarksFile.open(QIODevice::ReadOnly);
+
+    QTextStream in(&bookmarksFile);
+    while (!in.atEnd())
+    {
+       QString line = in.readLine();
+       auto dataList = line.split(CSV_SEPARATOR);
+
+       BookmarkPage page(dataList[0], dataList[1]);
+       this->AddBookmark(std::move(page));
+    }
+    bookmarksFile.close();
+}
+
+BookmarkMenu::~BookmarkMenu()
+{
+    QFile bookmarksFile(STORAGE_FILE);
+    bookmarksFile.open(QIODevice::WriteOnly);
+    QTextStream writeStream(&bookmarksFile);
+
+    for (const auto& bookmarkPage : m_Bookmarks)
+    {
+        auto pageData = bookmarkPage->GetBookmarkData();
+        writeStream << pageData.Url.toString() << CSV_SEPARATOR << pageData.Title << "\n";
+    }
+
+    bookmarksFile.close();
 }
 
 void BookmarkMenu::paintEvent(QPaintEvent *)
 {
     int x = 0, y = 0;
 
-    std::for_each(m_Bookmarks.begin(), m_Bookmarks.end(), [&](const auto& bookmark){
+    for (const auto& bookmark : m_Bookmarks)
+    {
         bookmark->move(x, y);
         y += bookmark->height();
-    });
+    }
 }
 
-void BookmarkMenu::AddBookmark(QWebEnginePage* page)
+void BookmarkMenu::resizeEvent(QResizeEvent *event)
+{
+    int width = event->size().width(), height = BOOKMARK_HEIGHT;
+
+    for (const auto& bookmark : m_Bookmarks)
+    {
+        bookmark->resize(width, height);
+    }
+}
+
+void BookmarkMenu::AddBookmark(BookmarkPage page)
 {
     auto newBookmark = std::make_shared<Bookmark>(this);
 
     newBookmark->setParent(this);
-    newBookmark->SetTitle(page->title());
-    newBookmark->SetUrl(page->url());
+    newBookmark->SetInfo(page);
+    newBookmark->show();
     newBookmark->resize(this->width(), BOOKMARK_HEIGHT);
 
     std::weak_ptr<Bookmark> weakBookmark = newBookmark;

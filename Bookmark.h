@@ -1,6 +1,8 @@
 #ifndef BOOKMARK_H
 #define BOOKMARK_H
 
+#include "BookmarkPage.h"
+
 #include <QPushButton>
 #include <QUrl>
 #include <QWidget>
@@ -12,14 +14,11 @@ public:
     explicit Bookmark(QWidget *parent = nullptr);
 
 public:
-    QUrl GetUrl();
+    BookmarkPage GetBookmarkData();
+    void         SetInfo(BookmarkPage);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-
-public slots:
-    void SetTitle(QString);
-    void SetUrl(QUrl);
 
 signals:
     void HrefPressed(QUrl);
@@ -30,7 +29,7 @@ private:
     QPushButton m_Remove;
 
 private:
-    QUrl m_Url;
+    BookmarkPage m_BookmarkData;
 
 };
 

@@ -4,12 +4,13 @@
 
 constexpr int VISITED_HISTORY_HEIGHT = 40;
 
-constexpr char CSV_SEPARATOR[3] = "||";
+constexpr char CSV_SEPARATOR[] = "||";
+constexpr char STORAGE_FILE[] = "history.csv";
 
 HistoryMenu::HistoryMenu(QWidget *parent)
     : QMainWindow(parent)
 {
-    QFile historyFile("history.csv");
+    QFile historyFile(STORAGE_FILE);
     historyFile.open(QIODevice::ReadOnly);
 
     QTextStream in(&historyFile);
@@ -26,7 +27,7 @@ HistoryMenu::HistoryMenu(QWidget *parent)
 
 HistoryMenu::~HistoryMenu()
 {
-    QFile historyFile("history.csv");
+    QFile historyFile(STORAGE_FILE);
     historyFile.open(QIODevice::WriteOnly);
     QTextStream writeStream(&historyFile);
 
@@ -61,15 +62,20 @@ void HistoryMenu::AddVisitedPage(VisitedPage page)
 {
     auto visitedHistory = std::make_shared<VisitedHistory>(this);
     visitedHistory->SetInfo(page);
+    visitedHistory->show();
     visitedHistory->resize(this->width(), VISITED_HISTORY_HEIGHT);
 
     std::weak_ptr<VisitedHistory> weakVisited = visitedHistory;
 
-    connect(&*visitedHistory, &VisitedHistory::HrefPressed, this, &HistoryMenu::VisitedHistorySelected);
+    connect(&*visitedHistory, &VisitedHistory::HrefPressed, [this](QUrl url){
+        emit this->VisitedHistorySelected(std::move(url));
+        this->hide();
+    });
 
     connect(&*visitedHistory, &VisitedHistory::RemovePressed, [this, weakVisited](){
         m_Visited.erase(weakVisited.lock());
     });
 
     m_Visited.insert(visitedHistory);
+
 }

@@ -31,7 +31,6 @@ void VisitedHistory::resizeEvent(QResizeEvent *event)
 
     moveElements();
 }
-
 void VisitedHistory::SetInfo(VisitedPage page)
 {
     m_PageData = std::move(page);

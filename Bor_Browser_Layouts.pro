@@ -38,6 +38,7 @@ SOURCES += \
 HEADERS += \
     Bookmark.h \
     BookmarkMenu.h \
+    BookmarkPage.h \
     BookmarkPanel.h \
     HistoryMenu.h \
     HistoryPanel.h \
