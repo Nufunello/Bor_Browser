@@ -17,7 +17,7 @@ VisitedHistory::VisitedHistory(QWidget *parent)
 
     connect(&m_BtnRemove, &QPushButton::clicked, this, &VisitedHistory::RemovePressed);
     connect(&m_BtnHref,   &QPushButton::clicked, [this](){
-        emit this->HrefPressed(m_Url);
+        emit this->HrefPressed(m_PageData.Url);
     });
 }
 
@@ -34,16 +34,15 @@ void VisitedHistory::resizeEvent(QResizeEvent *event)
 
 void VisitedHistory::SetInfo(VisitedPage page)
 {
-    m_Url = page.Url;
-    m_Date = page.Date;
+    m_PageData = std::move(page);
 
-    m_LblTime.setText(m_Date.time().toString());
-    m_BtnHref.setText(page.Title + "\n" + page.Url.toString());
+    m_LblTime.setText(m_PageData.Date.time().toString());
+    m_BtnHref.setText(m_PageData.Title + "\n" + m_PageData.Url.toString());
 }
 
-QDateTime VisitedHistory::GetDate()
+VisitedPage VisitedHistory::GetPageData()
 {
-    return m_Date;
+    return m_PageData;
 }
 
 void VisitedHistory::moveElements()

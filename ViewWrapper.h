@@ -23,7 +23,8 @@ signals:
     void PageLoaded(QWebEnginePage*);
 
 private:
-    std::shared_ptr<View> m_CurrentView;
+    std::shared_ptr<View>   m_CurrentView;
+    QMetaObject::Connection m_CurrentPageLoadedConnection;
 
 private:
     void closeCurrentView();

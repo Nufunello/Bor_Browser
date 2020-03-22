@@ -5,6 +5,15 @@
 
 struct VisitedPage
 {
+    inline VisitedPage() = default;
+
+    inline VisitedPage(QUrl url, QString title, QDateTime date)
+    {
+        Url   = std::move(url);
+        Title = std::move(title);
+        Date  = std::move(date);
+    }
+
     inline VisitedPage(QWebEnginePage* page)
     {
         Url   = page->url();

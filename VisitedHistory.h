@@ -17,8 +17,8 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public:
-    void      SetInfo(VisitedPage);
-    QDateTime GetDate();
+    void        SetInfo(VisitedPage);
+    VisitedPage GetPageData();
 
 signals:
     void HrefPressed(QUrl);
@@ -30,8 +30,7 @@ private:
     QPushButton m_BtnRemove;
 
 private:
-    QUrl      m_Url;
-    QDateTime m_Date;
+    VisitedPage m_PageData;
 
 private:
     void moveElements();

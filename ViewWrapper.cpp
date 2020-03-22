@@ -18,8 +18,6 @@ void ViewWrapper::resizeEvent(QResizeEvent *event)
 
 void ViewWrapper::ChangeView(std::shared_ptr<View> view)
 {
-    connect(&*view, &View::PageLoaded, this, &ViewWrapper::PageLoaded);
-
     closeCurrentView();
     m_CurrentView = view;
     openCurrentView();
@@ -33,13 +31,18 @@ std::shared_ptr<View> ViewWrapper::GetCurrentView()
 void ViewWrapper::closeCurrentView()
 {
     if (m_CurrentView != nullptr)
+    {
         m_CurrentView->hide();
+        QObject::disconnect(m_CurrentPageLoadedConnection);
+    }
 }
 
 void ViewWrapper::openCurrentView()
 {
     if (m_CurrentView != nullptr)
     {
+        m_CurrentPageLoadedConnection = connect(&*m_CurrentView, &View::PageLoaded, this, &ViewWrapper::PageLoaded);
+
         m_CurrentView->resize(this->size());
         m_CurrentView->show();
     }

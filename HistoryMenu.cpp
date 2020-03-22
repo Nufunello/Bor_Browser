@@ -4,9 +4,39 @@
 
 constexpr int VISITED_HISTORY_HEIGHT = 40;
 
+constexpr char CSV_SEPARATOR[3] = "||";
+
 HistoryMenu::HistoryMenu(QWidget *parent)
     : QMainWindow(parent)
 {
+    QFile historyFile("history.csv");
+    historyFile.open(QIODevice::ReadOnly);
+
+    QTextStream in(&historyFile);
+    while (!in.atEnd())
+    {
+       QString line = in.readLine();
+       auto dataList = line.split(CSV_SEPARATOR);
+
+       VisitedPage page(dataList[0], dataList[1], QDateTime::fromString(dataList[2]));
+       this->AddVisitedPage(std::move(page));
+    }
+    historyFile.close();
+}
+
+HistoryMenu::~HistoryMenu()
+{
+    QFile historyFile("history.csv");
+    historyFile.open(QIODevice::WriteOnly);
+    QTextStream writeStream(&historyFile);
+
+    for (const auto& visitedPage : m_Visited)
+    {
+        auto pageData = visitedPage->GetPageData();
+        writeStream << pageData.Url.toString() << CSV_SEPARATOR << std::move(pageData.Title) << CSV_SEPARATOR << pageData.Date.toString() << "\n";
+    }
+
+    historyFile.close();
 }
 
 void HistoryMenu::resizeEvent(QResizeEvent *event)
