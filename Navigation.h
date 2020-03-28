@@ -21,9 +21,9 @@ public slots:
     void UpdateNavigationStatus(QWebEnginePage*);
 
 public:
-    std::shared_ptr<NavigationPanel> GetNavigationPanel();
-    std::shared_ptr<NavigationUrl>   GetNavigationUrl();
-    std::shared_ptr<BookmarkPanel>   GetBookmarkPanel();
+    NavigationPanel* GetNavigationPanel();
+    NavigationUrl*   GetNavigationUrl();
+    BookmarkPanel*   GetBookmarkPanel();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -33,9 +33,9 @@ signals:
 private:
     QHBoxLayout m_MainLayout;
 
-    std::shared_ptr<NavigationPanel> m_Panel;
-    std::shared_ptr<NavigationUrl>   m_Url;
-    std::shared_ptr<BookmarkPanel>   m_Bookmark;
+    std::unique_ptr<NavigationPanel> m_Panel;
+    std::unique_ptr<NavigationUrl>   m_Url;
+    std::unique_ptr<BookmarkPanel>   m_Bookmark;
 
 private:
     void moveWidgets(QPoint point);

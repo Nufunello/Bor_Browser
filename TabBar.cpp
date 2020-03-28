@@ -37,7 +37,7 @@ void TabBar::paintEvent(QPaintEvent *)
 {
     int x = this->x(), y = this-> y();
 
-    for (const std::shared_ptr<Tab>& tab : m_Tabs)
+    for (Tab* const tab : m_Tabs)
     {
         tab->move(x, y);
         x += tab->width();
@@ -46,11 +46,9 @@ void TabBar::paintEvent(QPaintEvent *)
     m_BtnAddTab.move(x, y);
 }
 
-void TabBar::AddTab(std::shared_ptr<Tab> tab)
+void TabBar::AddTab(Tab* tab)
 {
     this->ChangeTab(tab);
-
-    std::weak_ptr<Tab> weakTab = tab;
 
     m_Tabs.emplace_back(tab);
 
@@ -69,16 +67,16 @@ void TabBar::AddTab(std::shared_ptr<Tab> tab)
     }
 }
 
-void TabBar::ChangeTab(std::shared_ptr<Tab> tab)
+void TabBar::ChangeTab(Tab* tab)
 {
     enableCurrentTab();
     m_CurrentTab = std::move(tab);
     disableCurrentTab();
 }
 
-void TabBar::RemoveTab(std::shared_ptr<Tab> tab)
+void TabBar::RemoveTab(Tab* tab)
 {
-    auto newTab = m_Tabs.erase(std::find(m_Tabs.begin(), m_Tabs.end(), tab));
+    auto itNewTab = m_Tabs.erase(std::find(m_Tabs.begin(), m_Tabs.end(), tab));
 
     if (m_Tabs.empty())
     {
@@ -88,8 +86,7 @@ void TabBar::RemoveTab(std::shared_ptr<Tab> tab)
     {
         if (tab == m_CurrentTab)
         {
-            this->ChangeTab(*newTab);
-            (*newTab)->Selected();
+            this->changeTab(itNewTab != m_Tabs.end() ? itNewTab : std::prev(itNewTab));
         }
         this->resizeTabs();
     }
@@ -118,8 +115,16 @@ void TabBar::resizeTabs()
 
 void TabBar::resizeTabs(int width, int height)
 {
-    for (const std::shared_ptr<Tab>& tab : m_Tabs)
+    for (Tab* const tab : m_Tabs)
     {
         tab->resize(width, height);
     }
+}
+
+void TabBar::changeTab(const std::vector<Tab*>::iterator &it)
+{
+    auto& newTab = *it;
+
+    this->ChangeTab(newTab);
+    newTab->Selected();
 }

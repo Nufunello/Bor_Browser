@@ -10,18 +10,22 @@ class TabView : public QObject
     Q_OBJECT
 public:
     explicit TabView(QObject *parent = nullptr);
+    ~TabView();
 
 public:
-    std::shared_ptr<Tab>  GetTab();
-    std::shared_ptr<View> GetView();
+    Tab*  GetTab();
+    View* GetView();
 
 signals:
     void Selected();
     void Removed();
 
 private:
-    std::shared_ptr<Tab>  m_Tab;
-    std::shared_ptr<View> m_View;
+    std::unique_ptr<Tab>  m_Tab;
+    std::unique_ptr<View> m_View;
+
+public:
+    static int s_Counter;
 
 };
 

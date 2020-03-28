@@ -7,8 +7,8 @@ constexpr int NAVIGATION_HEIGHT = 30;
 View::View(QWidget *parent)
     : QWidget(parent)
 {
-    m_Navigation = std::make_shared<Navigation>(this);
-    m_WebView    = std::make_shared<WebView>(this);
+    m_Navigation = std::make_unique<Navigation>(this);
+    m_WebView    = std::make_unique<WebView>(this);
 
     connect(&*m_WebView, &WebView::UrlChanged, &*m_Navigation, &Navigation::UpdateNavigationStatus);
 
@@ -37,14 +37,14 @@ void View::resizeEvent(QResizeEvent *event)
     moveWidgets();
 }
 
-std::shared_ptr<Navigation> View::GetNavigation()
+Navigation* View::GetNavigation()
 {
-    return m_Navigation;
+    return m_Navigation.get();
 }
 
-std::shared_ptr<WebView> View::GetWebView()
+WebView* View::GetWebView()
 {
-    return m_WebView;
+    return m_WebView.get();
 }
 
 void View::moveWidgets()

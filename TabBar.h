@@ -19,27 +19,27 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 public slots:
-    void AddTab(std::shared_ptr<Tab>);
-    void ChangeTab(std::shared_ptr<Tab>);
-    void RemoveTab(std::shared_ptr<Tab>);
+    void AddTab(Tab*);
+    void ChangeTab(Tab*);
+    void RemoveTab(Tab*);
 
 signals:
     void AddTabClicked();
     void IsEmpty();
 
 private:
-    QHBoxLayout                       m_HorizontalLayout;
+    Tab*              m_CurrentTab;
 
-    std::shared_ptr<Tab>              m_CurrentTab;
-
-    std::vector<std::shared_ptr<Tab>> m_Tabs;
-    QPushButton                       m_BtnAddTab;
+    std::vector<Tab*> m_Tabs;
+    QPushButton       m_BtnAddTab;
 
 private:
     void enableCurrentTab();
     void disableCurrentTab();
     void resizeTabs();
     void resizeTabs(int height, int width);
+
+    void changeTab(const std::vector<Tab*>::iterator& it);
 
 };
 

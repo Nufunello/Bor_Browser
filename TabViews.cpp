@@ -39,15 +39,23 @@ TabViews::TabViews(QWidget *parent)
     });
 
     auto historyMenu = m_History.GetHistoryMenu();
-    connect(&*historyMenu, &HistoryMenu::VisitedHistorySelected, [this](QUrl url){
+    connect(historyMenu, &HistoryMenu::VisitedHistorySelected, [this](QUrl url){
         m_View.GetCurrentView()->GetWebView()->LoadUrl(std::move(url));
     });
 }
 
-void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
+TabViews::~TabViews()
 {
-    auto tab  = tabView->GetTab();
-    auto view = tabView->GetView();
+    m_TabViews.clear();
+    qDebug() << "TabViews undeleted:" << TabView::s_Counter;
+}
+
+void TabViews::AddTabView(std::unique_ptr<TabView> tabView)
+{
+    auto raw = tabView.get();
+
+    auto tab  = raw->GetTab();
+    auto view = raw->GetView();
 
     tab->setParent(&m_TabBar);
     view->setParent(&m_View);
@@ -55,37 +63,27 @@ void TabViews::AddTabView(std::shared_ptr<TabView> tabView)
     tab->show();
     view->show();
 
-    m_TabViews.insert(tabView);
-
     m_TabBar.AddTab(tab);
     m_View.ChangeView(view);
 
-    std::weak_ptr<TabView> weakTabView = tabView;
-
-    connect(&*tabView, &TabView::Removed, [this, weakTabView](){
-        auto tabView = weakTabView.lock();
-        m_TabBar.RemoveTab(tabView->GetTab());
-        m_TabViews.erase(tabView);
+    connect(raw, &TabView::Selected, [this, tab = &*tab, view = &*view](){
+        m_TabBar.ChangeTab(tab);
+        m_View.ChangeView(view);
+    });
+    connect(raw, &TabView::Removed, [this, raw](){
+        m_TabBar.RemoveTab(raw->GetTab());
     });
 
-    //Tab change connection
-    std::weak_ptr<Tab>  weakTab  = tab;
-    std::weak_ptr<View> weakView = view;
-
-    connect(&*tabView, &TabView::Selected, [=](){
-        m_TabBar.ChangeTab(weakTab.lock());
-        m_View.ChangeView(weakView.lock());
-    });
-    //
-
-    //Bookmarks connections
     auto bookmarkPanelPtr = &*m_View.GetCurrentView()->GetNavigation()->GetBookmarkPanel();
     connect(bookmarkPanelPtr, &BookmarkPanel::AddBookmarkPressed, [this](){
         m_BookmarkMenu.AddBookmark(&*m_View.GetCurrentView()->GetWebView()->GetCurrentPage());
     });
-
     connect(bookmarkPanelPtr, &BookmarkPanel::OpenBookmarksPressed, &m_BookmarkMenu, &BookmarkMenu::show);
-    //
+
+    auto itTabView = m_TabViews.emplace(std::move(tabView)).first;
+    connect(raw, &TabView::Removed, [this, itTabView]() {
+        m_TabViews.erase(itTabView);
+    });
 }
 
 void TabViews::resizeEvent(QResizeEvent *event)
@@ -108,7 +106,7 @@ void TabViews::moveEvent(QMoveEvent *event)
 
 void TabViews::addEmptyTab()
 {
-    AddTabView(std::make_shared<TabView>());
+    AddTabView(std::make_unique<TabView>());
 }
 
 void TabViews::moveWidgets(QPoint pos)

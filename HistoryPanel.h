@@ -13,7 +13,7 @@ public:
     explicit HistoryPanel(QWidget *parent = nullptr);
 
 public:
-    std::shared_ptr<HistoryMenu> GetHistoryMenu();
+    HistoryMenu* GetHistoryMenu();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -22,7 +22,7 @@ signals:
 
 private:
     QPushButton                  m_BtnOpenHistoryMenu;
-    std::shared_ptr<HistoryMenu> m_Menu;
+    std::unique_ptr<HistoryMenu> m_Menu;
 
 };
 

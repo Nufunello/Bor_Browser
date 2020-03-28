@@ -17,8 +17,8 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public:
-    std::shared_ptr<Navigation> GetNavigation();
-    std::shared_ptr<WebView>    GetWebView();
+    Navigation* GetNavigation();
+    WebView*    GetWebView();
 
 signals:
     void PageLoaded(QWebEnginePage*);
@@ -26,8 +26,8 @@ signals:
 private:
     QVBoxLayout m_MainLayout;
 
-    std::shared_ptr<Navigation> m_Navigation;
-    std::shared_ptr<WebView>    m_WebView;
+    std::unique_ptr<Navigation> m_Navigation;
+    std::unique_ptr<WebView>    m_WebView;
 
 private:
     void moveWidgets();

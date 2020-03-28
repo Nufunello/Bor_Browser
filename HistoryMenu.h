@@ -11,7 +11,7 @@
 
 struct VisitedHistoryCompare
 {
-    bool operator()(const std::shared_ptr<VisitedHistory>& lhs, const std::shared_ptr<VisitedHistory>& rhs) const
+    bool operator()(const std::unique_ptr<VisitedHistory>& lhs, const std::unique_ptr<VisitedHistory>& rhs) const
     {
         return lhs->GetPageData().Date > rhs->GetPageData().Date;
     }
@@ -35,7 +35,7 @@ signals:
     void VisitedHistorySelected(QUrl);
 
 private:
-    std::set<std::shared_ptr<VisitedHistory>, VisitedHistoryCompare> m_Visited;
+    std::set<std::unique_ptr<VisitedHistory>, VisitedHistoryCompare> m_Visited;
 
 };
 

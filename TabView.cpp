@@ -1,34 +1,37 @@
 #include "TabView.h"
 
+int TabView::s_Counter = 0;
+
 TabView::TabView(QObject *parent)
     : QObject(parent)
 {
-    m_Tab  = std::make_shared<Tab>();
-    m_View = std::make_shared<View>();
-
-    std::weak_ptr<Tab> weakTab   = m_Tab;
-    std::weak_ptr<View> weakView = m_View;
+    ++s_Counter;
+    m_Tab  = std::make_unique<Tab>();
+    m_View = std::make_unique<View>();
 
     connect(&*m_Tab, &Tab::Selected, this, &TabView::Selected);
     connect(&*m_Tab, &Tab::Removed,  this, &TabView::Removed);
 
-    connect(&*m_View->GetWebView(), &WebView::UrlChanged, [weakTab](QWebEnginePage* page){
-       auto tab = weakTab.lock();
+    connect(&*m_View->GetWebView(), &WebView::UrlChanged, [tab = &*m_Tab](QWebEnginePage* page){
        tab->UpdateTabInfo(page->title());
     });
 
-    connect(&*m_View->GetWebView(), &WebView::PageUpdated, [weakTab](QWebEnginePage* page){
-        auto tab = weakTab.lock();
+    connect(&*m_View->GetWebView(), &WebView::PageUpdated, [tab = &*m_Tab](QWebEnginePage* page){
         tab->UpdateTabInfo(page->title());
     });
 }
 
-std::shared_ptr<Tab> TabView::GetTab()
+TabView::~TabView()
 {
-    return m_Tab;
+    --s_Counter;
 }
 
-std::shared_ptr<View> TabView::GetView()
+Tab* TabView::GetTab()
 {
-    return m_View;
+    return &*m_Tab;
+}
+
+View* TabView::GetView()
+{
+    return &*m_View;
 }

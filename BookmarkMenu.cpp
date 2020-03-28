@@ -23,6 +23,7 @@ BookmarkMenu::BookmarkMenu(QWidget *parent)
        BookmarkPage page(dataList[0], dataList[1]);
        this->AddBookmark(std::move(page));
     }
+
     bookmarksFile.close();
 }
 
@@ -64,22 +65,22 @@ void BookmarkMenu::resizeEvent(QResizeEvent *event)
 
 void BookmarkMenu::AddBookmark(BookmarkPage page)
 {
-    auto newBookmark = std::make_shared<Bookmark>(this);
+    auto newBookmark = std::make_unique<Bookmark>(this);
 
     newBookmark->setParent(this);
     newBookmark->SetInfo(page);
     newBookmark->show();
     newBookmark->resize(this->width(), BOOKMARK_HEIGHT);
 
-    std::weak_ptr<Bookmark> weakBookmark = newBookmark;
+    auto raw = newBookmark.get();
 
-    connect(&*newBookmark, &Bookmark::HrefPressed, [weakBookmark, this](QUrl url){
+    auto itBookmark = m_Bookmarks.emplace(std::move(newBookmark)).first;
+
+    connect(raw, &Bookmark::RemovePressed, [itBookmark, this](){
+        m_Bookmarks.erase(itBookmark);
+    });
+
+    connect(raw, &Bookmark::HrefPressed, [this](QUrl url){
         emit this->BookmarkSelected(url);
     });
-
-    connect(&*newBookmark, &Bookmark::RemovePressed, [weakBookmark, this](){
-        m_Bookmarks.erase(weakBookmark.lock());
-    });
-
-    m_Bookmarks.insert(newBookmark);
 }

@@ -60,22 +60,23 @@ void HistoryMenu::paintEvent(QPaintEvent *)
 
 void HistoryMenu::AddVisitedPage(VisitedPage page)
 {
-    auto visitedHistory = std::make_shared<VisitedHistory>(this);
+    auto visitedHistory = std::make_unique<VisitedHistory>(this);
     visitedHistory->SetInfo(page);
     visitedHistory->show();
     visitedHistory->resize(this->width(), VISITED_HISTORY_HEIGHT);
 
-    std::weak_ptr<VisitedHistory> weakVisited = visitedHistory;
+    auto raw = visitedHistory.get();
 
-    connect(&*visitedHistory, &VisitedHistory::HrefPressed, [this](QUrl url){
+    auto itVisitedHistory = m_Visited.emplace(std::move(visitedHistory)).first;
+
+    connect(raw, &VisitedHistory::HrefPressed, [this](QUrl url){
         emit this->VisitedHistorySelected(std::move(url));
         this->hide();
     });
 
-    connect(&*visitedHistory, &VisitedHistory::RemovePressed, [this, weakVisited](){
-        m_Visited.erase(weakVisited.lock());
+    connect(raw, &VisitedHistory::RemovePressed, [this, itVisitedHistory](){
+        m_Visited.erase(itVisitedHistory);
     });
 
-    m_Visited.insert(visitedHistory);
 
 }

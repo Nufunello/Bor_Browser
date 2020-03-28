@@ -5,8 +5,6 @@
 constexpr float MAIN_BUTTON_WIDTH_KOEF   = {0.8f};
 constexpr float REMOVE_BUTTON_WIDTH_KOEF = {0.2f};
 
-int Tab::s_Counter = 0;
-
 Tab::Tab(QWidget *parent)
     : QWidget(parent)
 {

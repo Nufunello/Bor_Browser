@@ -15,15 +15,15 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public:
-    void ChangeView(std::shared_ptr<View>);
+    void ChangeView(View*);
 
-    std::shared_ptr<View> GetCurrentView();
+    View* GetCurrentView();
 
 signals:
     void PageLoaded(QWebEnginePage*);
 
 private:
-    std::shared_ptr<View>   m_CurrentView;
+    View*                   m_CurrentView;
     QMetaObject::Connection m_CurrentPageLoadedConnection;
 
 private:

@@ -6,6 +6,8 @@
 #include "TabView.h"
 #include "ViewWrapper.h"
 
+#include <unordered_set>
+
 #include <QWidget>
 
 class TabViews : public QWidget
@@ -13,9 +15,10 @@ class TabViews : public QWidget
     Q_OBJECT
 public:
     explicit TabViews(QWidget *parent = nullptr);
+    ~TabViews();
 
 public:
-    void AddTabView(std::shared_ptr<TabView>);
+    void AddTabView(std::unique_ptr<TabView>);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -36,7 +39,7 @@ private:
     BookmarkMenu  m_BookmarkMenu;
 
 private:
-    std::set<std::shared_ptr<TabView>> m_TabViews;
+    std::unordered_set<std::unique_ptr<TabView>>  m_TabViews;
 
 private:
     void addEmptyTab();

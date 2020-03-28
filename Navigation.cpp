@@ -9,9 +9,9 @@ constexpr int BOOKMARK_WIDTH = 80;
 Navigation::Navigation(QWidget *parent)
     : QWidget(parent)
 {
-    m_Panel = std::make_shared<NavigationPanel>(this);
-    m_Url = std::make_shared<NavigationUrl>(this);
-    m_Bookmark = std::make_shared<BookmarkPanel>(this);
+    m_Panel    = std::make_unique<NavigationPanel>(this);
+    m_Url      = std::make_unique<NavigationUrl>(this);
+    m_Bookmark = std::make_unique<BookmarkPanel>(this);
 
     m_MainLayout.addWidget(&*m_Panel);
     m_MainLayout.addWidget(&*m_Url);
@@ -31,19 +31,19 @@ void Navigation::UpdateNavigationStatus(QWebEnginePage *page)
     m_Panel->UpdateButtonsStatus(pageHistory->canGoBack(), pageHistory->canGoForward());
 }
 
-std::shared_ptr<NavigationPanel> Navigation::GetNavigationPanel()
+NavigationPanel* Navigation::GetNavigationPanel()
 {
-    return m_Panel;
+    return m_Panel.get();
 }
 
-std::shared_ptr<NavigationUrl> Navigation::GetNavigationUrl()
+NavigationUrl* Navigation::GetNavigationUrl()
 {
-    return m_Url;
+    return m_Url.get();
 }
 
-std::shared_ptr<BookmarkPanel> Navigation::GetBookmarkPanel()
+BookmarkPanel* Navigation::GetBookmarkPanel()
 {
-    return m_Bookmark;
+    return m_Bookmark.get();
 }
 
 void Navigation::resizeEvent(QResizeEvent *event)

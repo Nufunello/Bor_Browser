@@ -31,8 +31,6 @@ private:
 private:
     void moveButtons();
 
-     static int s_Counter;
-
 };
 
 #endif // TAB_H
