@@ -15,6 +15,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
     void GoBackPressed();
@@ -25,10 +26,6 @@ private:
     QPushButton m_BtnBack;
     QPushButton m_BtnForward;
     QPushButton m_BtnRefresh;
-
-private:
-    void moveButtons();
-
 };
 
 #endif // NAVIGATIONPANEL_H

@@ -34,8 +34,12 @@ void View::resizeEvent(QResizeEvent *event)
 {
     m_Navigation->resize(event->size().width(), NAVIGATION_HEIGHT);
     m_WebView->resize(event->size().width(), event->size().height() - NAVIGATION_HEIGHT);
+}
 
-    moveWidgets();
+void View::paintEvent(QPaintEvent *)
+{
+    m_Navigation->move(0, 0);
+    m_WebView->move(m_Navigation->x(), m_Navigation->y() + m_Navigation->height());
 }
 
 Navigation* View::GetNavigation()
@@ -46,10 +50,4 @@ Navigation* View::GetNavigation()
 WebView* View::GetWebView()
 {
     return m_WebView.get();
-}
-
-void View::moveWidgets()
-{
-    m_Navigation->move(0, 0);
-    m_WebView->move(m_Navigation->x(), m_Navigation->y() + m_Navigation->height());
 }

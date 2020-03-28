@@ -27,6 +27,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
 
@@ -36,9 +37,6 @@ private:
     std::unique_ptr<NavigationPanel> m_Panel;
     std::unique_ptr<NavigationUrl>   m_Url;
     std::unique_ptr<BookmarkPanel>   m_Bookmark;
-
-private:
-    void moveWidgets(QPoint point);
 
 };
 

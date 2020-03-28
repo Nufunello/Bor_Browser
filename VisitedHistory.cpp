@@ -28,9 +28,15 @@ void VisitedHistory::resizeEvent(QResizeEvent *event)
     m_LblTime.resize(width * TIME_LABEL_WIDTH_KOEF, height);
     m_BtnHref.resize(width * HREF_BUTTON_WIDTH_KOEF, height);
     m_BtnRemove.resize(width * REMOVE_BUTTON_WIDTH_KOEF, height);
-
-    moveElements();
 }
+
+void VisitedHistory::paintEvent(QPaintEvent *)
+{
+    m_LblTime.move(5, 0);
+    m_BtnHref.move(m_LblTime.x() + m_LblTime.width(), m_LblTime.y());
+    m_BtnRemove.move(m_BtnHref.x() + m_BtnHref.width(), m_BtnHref.y());
+}
+
 void VisitedHistory::SetInfo(VisitedPage page)
 {
     m_PageData = std::move(page);
@@ -42,11 +48,4 @@ void VisitedHistory::SetInfo(VisitedPage page)
 VisitedPage VisitedHistory::GetPageData()
 {
     return m_PageData;
-}
-
-void VisitedHistory::moveElements()
-{
-    m_LblTime.move(5, 0);
-    m_BtnHref.move(m_LblTime.x() + m_LblTime.width(), m_LblTime.y());
-    m_BtnRemove.move(m_BtnHref.x() + m_BtnHref.width(), m_BtnHref.y());
 }

@@ -18,6 +18,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
     void UrlEntered(QUrl);

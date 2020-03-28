@@ -25,13 +25,16 @@ void Bookmark::resizeEvent(QResizeEvent *event)
 {
     m_Href.  resize(event->size().width() * 0.8, event->size().height());
     m_Remove.resize(event->size().width() * 0.2, event->size().height());
+}
 
+void Bookmark::paintEvent(QPaintEvent *)
+{
+    m_Href.move(0, 0);
     m_Remove.move(m_Href.x() + m_Href.width(), m_Href.y());
 }
 
 void Bookmark::SetInfo(BookmarkPage page)
 {
     m_BookmarkData = std::move(page);
-
     m_Href.setText(m_BookmarkData.Title);
 }

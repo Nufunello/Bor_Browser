@@ -25,11 +25,9 @@ void BookmarkPanel::resizeEvent(QResizeEvent *event)
     m_BtnAdd.resize(width, height);
 
     m_BtnOpenBookmarks.resize(width, height);
-
-    this->moveButtons();
 }
 
-void BookmarkPanel::moveButtons()
+void BookmarkPanel::paintEvent(QPaintEvent *)
 {
     m_BtnAdd.move(0, 0);
     m_BtnOpenBookmarks.move(m_BtnAdd.x() + m_BtnAdd.width(), m_BtnAdd.y());

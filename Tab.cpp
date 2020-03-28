@@ -38,11 +38,9 @@ void Tab::resizeEvent(QResizeEvent *event)
 
     m_BtnToBeSelected.resize(width, height);
     m_BtnToRemove.    resize(width * REMOVE_BUTTON_WIDTH_KOEF, height);
-
-    this->moveButtons();
 }
 
-void Tab::moveButtons()
+void Tab::paintEvent(QPaintEvent *)
 {
     m_BtnToBeSelected.move(0, 0);
     m_BtnToRemove.    move(m_BtnToBeSelected.x() + m_BtnToBeSelected.width() * MAIN_BUTTON_WIDTH_KOEF, m_BtnToBeSelected.y());

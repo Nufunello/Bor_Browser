@@ -36,11 +36,9 @@ void NavigationPanel::resizeEvent(QResizeEvent *event)
     m_BtnBack.resize(avgWidth, height);
     m_BtnForward.resize(avgWidth, height);
     m_BtnRefresh.resize(avgWidth, height);
-
-    this->moveButtons();
 }
 
-void NavigationPanel::moveButtons()
+void NavigationPanel::paintEvent(QPaintEvent *)
 {
     m_BtnBack.move(0, 0);
     m_BtnForward.move(m_BtnBack.x() + m_BtnBack.width(), m_BtnBack.y());

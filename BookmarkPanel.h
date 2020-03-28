@@ -14,6 +14,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
     void AddBookmarkPressed();
@@ -22,9 +23,6 @@ signals:
 private:
     QPushButton m_BtnAdd;
     QPushButton m_BtnOpenBookmarks;
-
-private:
-    void moveButtons();
 
 };
 

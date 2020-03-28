@@ -15,6 +15,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 public:
     void        SetInfo(VisitedPage);

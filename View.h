@@ -15,6 +15,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 public:
     Navigation* GetNavigation();
@@ -28,9 +29,6 @@ private:
 
     std::unique_ptr<Navigation> m_Navigation;
     std::unique_ptr<WebView>    m_WebView;
-
-private:
-    void moveWidgets();
 
 };
 

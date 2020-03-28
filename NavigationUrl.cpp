@@ -19,9 +19,6 @@ NavigationUrl::NavigationUrl(QWidget *parent)
     m_UrlInput.setParent(this);
     m_LoadProgress.setParent(this);
 
-    m_UrlInput.move(0, PADDING);
-    m_LoadProgress.move(0, PADDING);
-
     m_LoadProgress.hide();
 
     connect(&m_UrlInput, &QLineEdit::returnPressed, [this](){
@@ -57,4 +54,10 @@ void NavigationUrl::resizeEvent(QResizeEvent *event)
 
     m_UrlInput.resize(width, height);
     m_LoadProgress.resize(width, height);
+}
+
+void NavigationUrl::paintEvent(QPaintEvent *)
+{
+    m_UrlInput.move(0, PADDING);
+    m_LoadProgress.move(0, PADDING);
 }

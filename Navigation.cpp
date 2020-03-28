@@ -53,15 +53,11 @@ void Navigation::resizeEvent(QResizeEvent *event)
     m_Panel->resize(PANEL_WIDTH, height);
     m_Url->resize(width - PANEL_WIDTH - BOOKMARK_WIDTH, height);
     m_Bookmark->resize(BOOKMARK_WIDTH, height);
-
-    moveWidgets(this->pos());
 }
 
-void Navigation::moveWidgets(QPoint point)
+void Navigation::paintEvent(QPaintEvent *)
 {
-    int y = point.y();
-
-    m_Panel->move(point);
-    m_Url->move(m_Panel->x() + PANEL_WIDTH, y);
-    m_Bookmark->move(m_Url->x() + m_Url->width(), y);
+    m_Panel->move(0, 0);
+    m_Url->move(m_Panel->x() + PANEL_WIDTH, m_Panel->y());
+    m_Bookmark->move(m_Url->x() + m_Url->width(), m_Url->y());
 }

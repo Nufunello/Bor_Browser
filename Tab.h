@@ -19,6 +19,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
     void Selected();
@@ -27,9 +28,6 @@ signals:
 private:
     QPushButton m_BtnToBeSelected;
     QPushButton m_BtnToRemove;
-
-private:
-    void moveButtons();
 
 };
 

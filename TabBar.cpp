@@ -35,7 +35,7 @@ void TabBar::resizeEvent(QResizeEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
-    int x = this->x(), y = this-> y();
+    int x = 0, y = 0;
 
     for (Tab* const tab : m_Tabs)
     {
