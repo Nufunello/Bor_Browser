@@ -13,9 +13,9 @@ Navigation::Navigation(QWidget *parent)
     m_Url      = std::make_unique<NavigationUrl>(this);
     m_Bookmark = std::make_unique<BookmarkPanel>(this);
 
-    m_MainLayout.addWidget(&*m_Panel);
-    m_MainLayout.addWidget(&*m_Url);
-    m_MainLayout.addWidget(&*m_Bookmark);
+    m_MainLayout.addWidget(m_Panel.get());
+    m_MainLayout.addWidget(m_Url.get());
+    m_MainLayout.addWidget(m_Bookmark.get());
 }
 
 void Navigation::ChangeLoadProgress(int progress)

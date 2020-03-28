@@ -22,7 +22,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-    void moveEvent(QMoveEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
 
@@ -43,7 +43,6 @@ private:
 
 private:
     void addEmptyTab();
-    void moveWidgets(QPoint);
 
 };
 

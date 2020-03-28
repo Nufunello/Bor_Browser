@@ -10,20 +10,21 @@ View::View(QWidget *parent)
     m_Navigation = std::make_unique<Navigation>(this);
     m_WebView    = std::make_unique<WebView>(this);
 
-    connect(&*m_WebView, &WebView::UrlChanged, &*m_Navigation, &Navigation::UpdateNavigationStatus);
+    auto pWebViewRaw = m_WebView.get();
+    connect(pWebViewRaw, &WebView::UrlChanged, &*m_Navigation, &Navigation::UpdateNavigationStatus);
 
-    connect(&*m_WebView, &WebView::PageUpdated, this, &View::PageLoaded);
+    connect(pWebViewRaw, &WebView::PageUpdated, this, &View::PageLoaded);
 
-    connect(&*m_WebView, &WebView::Loading, [this](int progress){
+    connect(pWebViewRaw, &WebView::Loading, [this](int progress){
         m_Navigation->ChangeLoadProgress(std::move(progress));
     });
 
-    auto navigationPanelPtr = &*m_Navigation->GetNavigationPanel();
-    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed,    &*m_WebView, &WebView::GoBack);
-    connect(navigationPanelPtr, &NavigationPanel::GoForwardPressed, &*m_WebView, &WebView::GoForward);
-    connect(navigationPanelPtr, &NavigationPanel::RefreshPressed,   &*m_WebView, &WebView::Refresh);
+    auto navigationPanelPtr = m_Navigation->GetNavigationPanel();
+    connect(navigationPanelPtr, &NavigationPanel::GoBackPressed,    pWebViewRaw, &WebView::GoBack);
+    connect(navigationPanelPtr, &NavigationPanel::GoForwardPressed, pWebViewRaw, &WebView::GoForward);
+    connect(navigationPanelPtr, &NavigationPanel::RefreshPressed,   pWebViewRaw, &WebView::Refresh);
 
-    auto navigationUrlPtr = &*m_Navigation->GetNavigationUrl();
+    auto navigationUrlPtr = m_Navigation->GetNavigationUrl();
     connect(navigationUrlPtr, &NavigationUrl::UrlEntered, [this](QUrl url){
         this->m_WebView->LoadUrl(std::move(url));
     });

@@ -66,7 +66,7 @@ void TabViews::AddTabView(std::unique_ptr<TabView> tabView)
     m_TabBar.AddTab(tab);
     m_View.ChangeView(view);
 
-    connect(raw, &TabView::Selected, [this, tab = &*tab, view = &*view](){
+    connect(raw, &TabView::Selected, [this, tab, view](){
         m_TabBar.ChangeTab(tab);
         m_View.ChangeView(view);
     });
@@ -74,15 +74,17 @@ void TabViews::AddTabView(std::unique_ptr<TabView> tabView)
         m_TabBar.RemoveTab(raw->GetTab());
     });
 
-    auto bookmarkPanelPtr = &*m_View.GetCurrentView()->GetNavigation()->GetBookmarkPanel();
-    connect(bookmarkPanelPtr, &BookmarkPanel::AddBookmarkPressed, [this](){
-        m_BookmarkMenu.AddBookmark(&*m_View.GetCurrentView()->GetWebView()->GetCurrentPage());
-    });
-    connect(bookmarkPanelPtr, &BookmarkPanel::OpenBookmarksPressed, &m_BookmarkMenu, &BookmarkMenu::show);
-
     auto itTabView = m_TabViews.emplace(std::move(tabView)).first;
     connect(raw, &TabView::Removed, [this, itTabView]() {
         m_TabViews.erase(itTabView);
+    });
+
+    auto pCurrentViewRaw = m_View.GetCurrentView();
+    auto bookmarkPanelPtr = pCurrentViewRaw->GetNavigation()->GetBookmarkPanel();
+    connect(bookmarkPanelPtr, &BookmarkPanel::OpenBookmarksPressed, &m_BookmarkMenu, &BookmarkMenu::show);
+
+    connect(bookmarkPanelPtr, &BookmarkPanel::AddBookmarkPressed, [this, pCurrentViewRaw](){
+        m_BookmarkMenu.AddBookmark(pCurrentViewRaw->GetWebView()->GetCurrentPage());
     });
 }
 
@@ -95,24 +97,19 @@ void TabViews::resizeEvent(QResizeEvent *event)
 
     int viewHeight = event->size().height() - m_TabBar.height();
     m_View.resize(width, viewHeight);
-
-    moveWidgets(this->pos());
 }
 
-void TabViews::moveEvent(QMoveEvent *event)
+void TabViews::paintEvent(QPaintEvent *)
 {
-    moveWidgets(event->pos());
+    auto pos = this->pos();
+
+    m_TabBar.move(pos);
+    m_History.move(m_TabBar.x() + m_TabBar.width(), m_TabBar.y());
+
+    m_View.move(pos.x(), m_TabBar.y() + TABBAR_HEIGHT);
 }
 
 void TabViews::addEmptyTab()
 {
     AddTabView(std::make_unique<TabView>());
-}
-
-void TabViews::moveWidgets(QPoint pos)
-{
-    m_TabBar.move(pos);
-    m_History.move(m_TabBar.x() + m_TabBar.width(), m_TabBar.y());
-
-    m_View.move(pos.x(), m_TabBar.y() + TABBAR_HEIGHT);
 }

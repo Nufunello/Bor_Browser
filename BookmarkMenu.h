@@ -8,7 +8,6 @@
 
 #include <QMainWindow>
 #include <QWebEnginePage>
-#include <QWidget>
 
 struct BookmarkCompare
 {

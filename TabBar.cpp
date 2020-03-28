@@ -4,7 +4,7 @@
 constexpr int ADD_BUTTON_WIDTH = 20;
 constexpr int TAB_MAX_WIDTH = 100;
 
-static inline int GetTabWidth(int width, int cTabs)
+static inline int getTabWidth(int width, int cTabs)
 {
     int avgWidth = (width - ADD_BUTTON_WIDTH) / cTabs;
     return std::min(TAB_MAX_WIDTH, avgWidth);
@@ -24,7 +24,7 @@ void TabBar::resizeEvent(QResizeEvent *event)
 {
     if (!m_Tabs.empty())
     {
-        int width = GetTabWidth(event->size().width(), m_Tabs.size());
+        int width = getTabWidth(event->size().width(), m_Tabs.size());
         int height = event->size().height();
 
         this->resizeTabs(width, height);
@@ -52,7 +52,7 @@ void TabBar::AddTab(Tab* tab)
 
     m_Tabs.emplace_back(tab);
 
-    int tabWidth  = GetTabWidth(this->width(), m_Tabs.size());
+    int tabWidth  = getTabWidth(this->width(), m_Tabs.size());
     int tabHeight = this->height();
 
     //if calculated tab width is less than const value
@@ -76,7 +76,7 @@ void TabBar::ChangeTab(Tab* tab)
 
 void TabBar::RemoveTab(Tab* tab)
 {
-    auto itNewTab = m_Tabs.erase(std::find(m_Tabs.begin(), m_Tabs.end(), tab));
+    auto itNextTab = m_Tabs.erase(std::find(m_Tabs.begin(), m_Tabs.end(), tab));
 
     if (m_Tabs.empty())
     {
@@ -86,7 +86,7 @@ void TabBar::RemoveTab(Tab* tab)
     {
         if (tab == m_CurrentTab)
         {
-            this->changeTab(itNewTab != m_Tabs.end() ? itNewTab : std::prev(itNewTab));
+            this->changeTab(itNextTab != m_Tabs.end() ? itNextTab : std::prev(itNextTab));
         }
         this->resizeTabs();
     }
@@ -107,7 +107,7 @@ void TabBar::disableCurrentTab()
 
 void TabBar::resizeTabs()
 {
-    int tabWidth  = GetTabWidth(this->width(), m_Tabs.size());
+    int tabWidth  = getTabWidth(this->width(), m_Tabs.size());
     int tabHeight = this->height();
 
     this->resizeTabs(tabWidth, tabHeight);
