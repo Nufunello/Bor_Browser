@@ -67,14 +67,14 @@ void HistoryMenu::AddVisitedPage(VisitedPage page)
 
 
     auto itVisitedHistory = m_Visited.emplace(std::move(visitedHistory)).first;
-    auto raw = itVisitedHistory->get();
+    auto pVisitedHistoryRaw = itVisitedHistory->get();
 
-    connect(raw, &VisitedHistory::HrefPressed, [this](QUrl url){
+    connect(pVisitedHistoryRaw, &VisitedHistory::HrefPressed, [this](QUrl url){
         emit this->VisitedHistorySelected(std::move(url));
         this->hide();
     });
 
-    connect(raw, &VisitedHistory::RemovePressed, [this, itVisitedHistory](){
+    connect(pVisitedHistoryRaw, &VisitedHistory::RemovePressed, [this, itVisitedHistory](){
         m_Visited.erase(itVisitedHistory);
     });
 }

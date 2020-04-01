@@ -52,10 +52,10 @@ TabViews::~TabViews()
 
 void TabViews::AddTabView(std::unique_ptr<TabView> tabView)
 {
-    auto raw = tabView.get();
+    auto pTabViewRaw = tabView.get();
 
-    auto tab  = raw->GetTab();
-    auto view = raw->GetView();
+    auto tab  = pTabViewRaw->GetTab();
+    auto view = pTabViewRaw->GetView();
 
     tab->setParent(&m_TabBar);
     view->setParent(&m_View);
@@ -66,16 +66,16 @@ void TabViews::AddTabView(std::unique_ptr<TabView> tabView)
     m_TabBar.AddTab(tab);
     m_View.ChangeView(view);
 
-    connect(raw, &TabView::Selected, [this, tab, view](){
+    connect(pTabViewRaw, &TabView::Selected, [this, tab, view](){
         m_TabBar.ChangeTab(tab);
         m_View.ChangeView(view);
     });
-    connect(raw, &TabView::Removed, [this, raw](){
-        m_TabBar.RemoveTab(raw->GetTab());
+    connect(pTabViewRaw, &TabView::Removed, [this, pTabViewRaw](){
+        m_TabBar.RemoveTab(pTabViewRaw->GetTab());
     });
 
     auto itTabView = m_TabViews.emplace(std::move(tabView)).first;
-    connect(raw, &TabView::Removed, [this, itTabView]() {
+    connect(pTabViewRaw, &TabView::Removed, [this, itTabView]() {
         m_TabViews.erase(itTabView);
     });
 

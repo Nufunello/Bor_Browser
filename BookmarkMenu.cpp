@@ -72,15 +72,15 @@ void BookmarkMenu::AddBookmark(BookmarkPage page)
     newBookmark->show();
     newBookmark->resize(this->width(), BOOKMARK_HEIGHT);
 
-    auto raw = newBookmark.get();
+    auto pBookmarkRaw = newBookmark.get();
 
     auto itBookmark = m_Bookmarks.emplace(std::move(newBookmark)).first;
 
-    connect(raw, &Bookmark::RemovePressed, [itBookmark, this](){
+    connect(pBookmarkRaw, &Bookmark::RemovePressed, [itBookmark, this](){
         m_Bookmarks.erase(itBookmark);
     });
 
-    connect(raw, &Bookmark::HrefPressed, [this](QUrl url){
+    connect(pBookmarkRaw, &Bookmark::HrefPressed, [this](QUrl url){
         emit this->BookmarkSelected(url);
     });
 }
